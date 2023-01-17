@@ -1,4 +1,4 @@
-package com.example.HandlingKafkaErrors.config.kafkaerror;
+package com.example.HandlingKafkaErrors.kaka.conf;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.Consumer;
@@ -17,8 +17,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Slf4j
 public class KafkaErrorHandler implements ContainerAwareErrorHandler {
 
-    @Override
     public void handle(Exception thrownException, List<ConsumerRecord<?, ?>> records, Consumer<?, ?> consumer, MessageListenerContainer container) {
+        log.error("Error processing STARTED");
         this.doSeeks(records, consumer);
         if (!records.isEmpty()) {
             ConsumerRecord<?, ?> record = records.get(0);
@@ -38,7 +38,7 @@ public class KafkaErrorHandler implements ContainerAwareErrorHandler {
                         topic, offset, partition, thrownException);
             }
         } else {
-            log.debug("Consumer exception - cause: {}", thrownException.getMessage());
+            log.error("Consumer exception - cause: {}", thrownException.getMessage());
         }
 
     }
@@ -65,6 +65,7 @@ public class KafkaErrorHandler implements ContainerAwareErrorHandler {
                     return record.offset();
                 });
             }
+
             first.set(false);
         });
         partitions.forEach(consumer::seek);

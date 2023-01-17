@@ -17,8 +17,13 @@ public class Person {
 
     private String lastName;
 
-    private int age;
+    private Integer age;
 
     private Loc loc;
 
+    private String MessageError;
+
+    public Boolean isnegatifAge() {
+        return this.age < 0;
+    }
 }

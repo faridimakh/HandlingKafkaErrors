@@ -1,6 +1,6 @@
 package com.example.HandlingKafkaErrors.controller;
 
-import com.example.HandlingKafkaErrors.kafka.PersonKafkaProducer;
+import com.example.HandlingKafkaErrors.kaka.PersonKafkaProducer;
 import com.example.HandlingKafkaErrors.model.Person;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +19,7 @@ public class JsonMessageController {
     }
 
     @PostMapping("/publish")
-    public ResponseEntity<String> publish(@RequestBody Person person){
+    public ResponseEntity<String> publish(@RequestBody Person person) {
         personKafkaProducer.sendMessage(person);
         return ResponseEntity.ok("Json message sent to kafka topic");
     }

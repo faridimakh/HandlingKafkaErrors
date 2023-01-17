@@ -13,4 +13,11 @@ public class Loc {
     private double lat;
     private double lgt;
 
+    public Boolean isnegatifLat() {
+        return this.lat < 0;
+    }
+
+    public Boolean isnegatifLgt() {
+        return this.lgt < 0;
+    }
 }
