@@ -34,7 +34,7 @@ the project contains two independent modules:
 
 ![garphe2](images/gr2.png)
 
-## Example of messages types:
+## Examples of messages types:
 
 * good message:<br>
 {"uuid":"farim","firstName":"farid","lastName":"imakh","age":35,"loc":{"lat":48.856613,"lgt":2.6547}}
