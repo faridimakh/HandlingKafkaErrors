@@ -1,9 +1,9 @@
 # Handling Kafka Errors
 
 ## discription :
-the project contains two independent modules:
-1. the kafkaProducer Service module takes care of creating topics and writing it in the input topic (send the wikiChange.json file attached to the project)
-2. the second streamfilterservice module takes care of ingesting in real time the data introduced in the first module and creates four output topics .
+the project consists in managing the errors of kafka in consumption,  given a message in Person format (read the format in code) in a kafka topic:
+- if the message contains an incorrectly entered value: serialization problem (example: expected integer-> character entered), the consumer ignore the message and sends a notification,
+- if the message contains a non-compliant value: negative age for example, the message will be ignored and sent to another topic for a future revision
 <br>
 <br>
 
@@ -30,9 +30,6 @@ the project contains two independent modules:
 
    in postmen: copy past, post method, url: http://localhost:8080/publish, send.
 <br>
-<br>
-
-![garphe2](images/gr2.png)
 
 ## Examples of messages types:
 
