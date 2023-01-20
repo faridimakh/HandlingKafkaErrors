@@ -22,7 +22,7 @@ the project contains two independent modules:
   
 ![normal_message](images/normalmessage.png)
 ![not_conform_value](images/not_conform_value.png)
-
+<br>
 2. send mal formed message (deserialization problem) -> use kafka-console-producer:
    -  kafka-console-producer --broker-list localhost:9092 --topic test_messsages --property "parse.key=true" --property "key.separator=:"
    -  deserializ_prob:{"uuid":"deserializ_prob","firstName":"iuiui","lastName":"ggtr","age":badage32,"loc":{"lat":48.856613,"lgt":2.6547}}
@@ -34,7 +34,7 @@ the project contains two independent modules:
 
 ![garphe2](images/gr2.png)
 
-## example of meaage types:
+## Example of messages types:
 
 * good message:<br>
 {"uuid":"farim","firstName":"farid","lastName":"imakh","age":35,"loc":{"lat":48.856613,"lgt":2.6547}}
