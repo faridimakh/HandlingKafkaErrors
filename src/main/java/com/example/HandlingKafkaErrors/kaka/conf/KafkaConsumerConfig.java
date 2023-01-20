@@ -100,7 +100,7 @@ public class KafkaConsumerConfig {
         fixedBackOffPolicy.setBackOffPeriod(3 * 1000L);
         retryTemplate.setBackOffPolicy(fixedBackOffPolicy);
         SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy(); // other policies are not better
-        retryPolicy.setMaxAttempts(2);
+        retryPolicy.setMaxAttempts(3);
         retryTemplate.setRetryPolicy(retryPolicy);
         return retryTemplate;
     }
