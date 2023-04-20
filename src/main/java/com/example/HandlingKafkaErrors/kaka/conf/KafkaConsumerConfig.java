@@ -38,10 +38,14 @@ public class KafkaConsumerConfig {
     private final Applicationproperties applicationproperties;
     private final KafkaTemplate<String, Person> kafkaTemplate;
 
-    /**
-     *  Kafka consumer factory setup - standard factory.
-     * @return JSON factory.
-     */
+    private String getThrowableSafely(RetryContext retryContext) {
+        Throwable lastThrowable = retryContext.getLastThrowable();
+        if (lastThrowable == null) {
+            return Strings.EMPTY;
+        }
+        return lastThrowable.getMessage();
+    }
+
     @Bean
     public ConsumerFactory<String, Person> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
@@ -66,17 +70,6 @@ public class KafkaConsumerConfig {
     }
 
 
-    @Bean("personKafkaListenerContainerFactory")
-    public ConcurrentKafkaListenerContainerFactory<String, Person> promoMaterialsKafkaListenerContainerFactory() {
-
-        ConcurrentKafkaListenerContainerFactory<String, Person> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerFactory());
-        factory.setRetryTemplate(kafkaRetry());
-        factory.setErrorHandler(new KafkaErrorHandler());
-        factory.setRecoveryCallback(this::retryOption1);
-        return factory;
-    }
-
 
     private Object retryOption1(RetryContext retryContext) {
         ConsumerRecord<String, Person> consumerRecord = (ConsumerRecord) retryContext.getAttribute("record");
@@ -93,7 +86,6 @@ public class KafkaConsumerConfig {
     }
 
 
-
     private RetryTemplate kafkaRetry() {
         RetryTemplate retryTemplate = new RetryTemplate();
         FixedBackOffPolicy fixedBackOffPolicy = new FixedBackOffPolicy();  // other policies are not better
@@ -105,22 +97,16 @@ public class KafkaConsumerConfig {
         return retryTemplate;
     }
 
-    private void doOnLastRetry(RetryContext retryContext, ConsumerRecord<String, Person> consumerRecord, Person value) {
-        if (Boolean.TRUE.equals(retryContext.getAttribute(RetryContext.EXHAUSTED))) {
-            log.info("MOVED TO ERROR DLQ");
-            value.setMessageError(getThrowableSafely(retryContext));
-            kafkaTemplate.send( applicationproperties.getKafkaTopicAccessoryDlq(),
-                    consumerRecord.key(),
-                    consumerRecord.value() );
-        }
-    }
 
-    private String getThrowableSafely(RetryContext retryContext) {
-        Throwable lastThrowable = retryContext.getLastThrowable();
-        if (lastThrowable == null) {
-            return Strings.EMPTY;
-        }
-        return lastThrowable.getMessage();
+    @Bean("personKafkaListenerContainerFactory")
+    public ConcurrentKafkaListenerContainerFactory<String, Person> promoMaterialsKafkaListenerContainerFactory() {
+
+        ConcurrentKafkaListenerContainerFactory<String, Person> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerFactory());
+        factory.setRetryTemplate(kafkaRetry());
+        factory.setErrorHandler(new KafkaErrorHandler());
+        factory.setRecoveryCallback(this::retryOption1);
+        return factory;
     }
 
 }
