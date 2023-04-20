@@ -4,6 +4,7 @@ import com.example.HandlingKafkaErrors.model.Person;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.javatuples.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +14,7 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -22,10 +24,6 @@ public class PersonKafkaConsumer {
     @Value("${kafka.person.topics.input}")
     private String topic;
 
-    private CountDownLatch latch = new CountDownLatch(1);
-
-    private Person payload;
-    private String key;
 
     @KafkaListener(topics = "${kafka.person.topics.input}",
             containerFactory = "personKafkaListenerContainerFactory")
@@ -34,7 +32,8 @@ public class PersonKafkaConsumer {
                         @Header(KafkaHeaders.RECEIVED_PARTITION_ID) Integer partition,
                         @Header(KafkaHeaders.OFFSET) Long offset)
     {
-
+        String key = consumerRecord.key();
+        Person payload = consumerRecord.value();
 
         LOGGER.info("Received a message contains a person information with id {}, from  topic name: {}, " +
                 "partition: {}, offset :{}", consumerRecord.value().toString(), topic, partition, offset);
@@ -53,6 +52,4 @@ public class PersonKafkaConsumer {
         }
     }
 
-
 }
-

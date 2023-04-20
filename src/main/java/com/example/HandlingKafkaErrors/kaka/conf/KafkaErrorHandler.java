@@ -48,7 +48,7 @@ public class KafkaErrorHandler implements ContainerAwareErrorHandler {
             return Optional.of((DeserializationException)thrownException);
         }
         if (thrownException.getCause()!=null &&
-                        DeserializationException.class.equals(thrownException.getCause().getClass())) {
+                DeserializationException.class.equals(thrownException.getCause().getClass())) {
             return Optional.of((DeserializationException)thrownException.getCause());
         }
         return Optional.empty();
